@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin tức thời tiết</title>
+    <style>
+        /* CSS cho trang web */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            background-color: #f4f4f4;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+        }
+        nav a:hover {
+            background-color: #ddd;
+        }
+        section {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .border {
+            border: 2px solid black;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 1200px;
+            height: 150px;
+            position: relative; /* Tạo vị trí tương đối */
+            background-size: cover; /* Chỉnh kích thước ảnh phù hợp với kích thước ô */
+            background-position: center; /* Căn giữa ảnh */
+            transition: opacity 0.5s ease-in-out; /* Chuyển tiếp hiệu ứng làm trong suốt */
+            cursor: pointer; /* Biến con trỏ thành dấu nhấp chuột khi di chuyển vào */
+            color: black; /* Màu chữ mặc định */
+        }
+        .dbp { 
+            background-image: url('https://th.bing.com/th/id/R.b113c8906c08f94ff599ee9354ca982c?rik=BfJCyCYXDV501g&riu=http%3a%2f%2fdienbien.gov.vn%2fportal%2fPhotos%2f2018-06-18%2fd5146a08b61d926dDJI_0055.JPG&ehk=h0wPtYVtwRk7Bca6pKA%2fyKEMvxvKt3GoQtuxCT%2bV15E%3d&risl=1&pid=ImgRaw&r=0'); 
+            color: white; /* Màu chữ cho Điện Biên */
+        }
+        .hn { background-image: url('https://phunugioi.com/wp-content/uploads/2020/10/anh-ha-noi.jpg'); }
+        .qb { background-image: url('https://phongnhatourist.com/wp-content/uploads/2021/02/tuong-dai-me-suot-02.jpg'); }
+        .dn { 
+            background-image: url('https://anhdepfree.com/wp-content/uploads/2020/08/hinh-anh-dep-da-nang.jpg'); 
+            color: white; /* Màu chữ cho Đà Nẵng */
+        }
+        .ld { 
+            background-image: url('https://img.freepik.com/premium-photo/aerial-view-sunflower-building-lam-vien-square-with-square-supermarket-park_706532-285.jpg'); 
+            color: white; /* Màu chữ cho Lâm Đồng */
+        }
+        .ct { background-image: url('https://thamhiemmekong.com/wp-content/uploads/2020/02/mui-ca-mau-1.jpg'); }
+        .transparent { opacity: 0.2; } /* Làm trong suốt các ô không được di chuột vào */
+    
+        /* Media query cho thiết bị có chiều rộng tối đa 768px (thiết bị di động) */
+        @media (max-width: 768px) {
+            .border {
+                width: 100%; /* Chiều rộng của các ô sẽ là 100% để đảm bảo hiển thị đúng trên thiết bị di động */
+            }
+        }
+
+        /* CSS cho phần dưới cùng */
+        .bottom-bar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .bottom-bar.hidden {
+            transform: translateY(100%);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tin tức thời tiết</h1>
+    </header>
+    <nav>
+        <a href="dien-bien.html"><span class="bold">Điện Biên</span></a>
+        <a href="ha-noi.html"><span class="bold">Hà Nội</span></a>
+        <a href="quang-binh.html"><span class="bold">Quảng Bình</span></a>
+        <a href="da-nang.html"><span class="bold">Đà Nẵng</span></a>
+        <a href="lam-dong.html"><span class="bold">Lâm Đồng</span></a>
+        <a href="ca-mau.html"><span class="bold">Cà Mau</span></a>
+    </nav>
+    <section>
+        <a href="dien-bien.html">
+            <div class="border dbp transparent" onmouseover="changeBackground('https://th.bing.com/th/id/R.b113c8906c08f94ff599ee9354ca982c?rik=BfJCyCYXDV501g&riu=http%3a%2f%2fdienbien.gov.vn%2fportal%2fPhotos%2f2018-06-18%2fd5146a08b61d926dDJI_0055.JPG&ehk=h0wPtYVtwRk7Bca6pKA%2fyKEMvxvKt3GoQtuxCT%2bV15E%3d&risl=1&pid=ImgRaw&r=0')" onmouseout="resetOpacity()">
+                <h2><span class="bold">Điện Biên</span></h2>
+                <p>Nhấn vào đây để xem thời tiết của Điện Biên</p>
+            </div>
+        </a>
+        <a href="ha-noi.html">
+            <div class="border hn transparent" onmouseover="changeBackground('https://phunugioi.com/wp-content/uploads/2020/10/anh-ha-noi.jpg')" onmouseout="resetOpacity()">
+                <h2><span class="bold">Hà Nội</span></h2>
+                <p>Nhấn vào đây để xem thời tiết của Hà Nội</p>
+            </div>
+        </a>
+        <a href="quang-binh.html">
+            <div class="border qb transparent" onmouseover="changeBackground('https://phongnhatourist.com/wp-content/uploads/2021/02/tuong-dai-me-suot-02.jpg')" onmouseout="resetOpacity()">
+                <h2><span class="bold">Quảng Bình</span></h2>
+                <p>Nhấn vào đây để xem thời tiết của Quảng Bình</p>
+            </div>
+        </a>
+        <a href="da-nang.html">
+            <div class="border dn transparent" onmouseover="changeBackground('https://anhdepfree.com/wp-content/uploads/2020/08/hinh-anh-dep-da-nang.jpg')" onmouseout="resetOpacity()">
+                <h2><span class="bold">Đà Nẵng</span></h2>
+                <p>Nhấn vào đây để xem thời tiết của Đà Nẵng</p>
+            </div>
+        </a>
+        <a href="lam-dong.html">
+            <div class="border ld transparent" onmouseover="changeBackground('https://img.freepik.com/premium-photo/aerial-view-sunflower-building-lam-vien-square-with-square-supermarket-park_706532-285.jpg')" onmouseout="resetOpacity()">
+                <h2><span class="bold">Lâm Đồng</span></h2>
+                <p>Nhấn vào đây để xem thời tiết của Lâm Đồng</p>
+            </div>
+        </a>
+        <a href="ca-mau.html">
+            <div class="border ct transparent" onmouseover="changeBackground('https://thamhiemmekong.com/wp-content/uploads/2020/02/mui-ca-mau-1.jpg')" onmouseout="resetOpacity()">
+                <h2><span class="bold">Cà Mau</span></h2>
+                <p>Nhấn vào đây để xem thời tiết của Cà Mau</p>
+            </div>
+        </a>
+    </section>
+
+    <div class="bottom-bar" id="bottomBar">
+        <span>Được tạo bởi Ngô Quang Huy ©</span>
+        <span id="currentTime"></span>
+    </div>
+
+    <script>
+        function changeBackground(imageUrl) {
+            // Thay đổi ảnh nền của trang web
+            document.body.style.backgroundImage = 'url(' + imageUrl + ')';
+            
+            // Làm mờ các ô không được di chuột vào
+            const allElements = document.querySelectorAll('.border');
+            allElements.forEach(element => {
+                element.classList.add('transparent');
+            });
+
+            // Loại bỏ độ trong suốt của ô được di chuột vào
+            event.currentTarget.classList.remove('transparent');
+        }
+
+        function resetOpacity() {
+            // Khôi phục độ trong suốt của tất cả các ô
+            const allElements = document.querySelectorAll('.border');
+            allElements.forEach(element => {
+                element.classList.remove('transparent');
+            });
+        }
+
+        function displayCurrentTime() {
+            const now = new Date();
+            const days = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+            const dayName = days[now.getDay()];
+            const date = now.toLocaleDateString("vi-VN");
+            const time = now.toLocaleTimeString("vi-VN");
+            document.getElementById("currentTime").innerHTML = `${dayName}, ${date}, ${time}`;
+        }
+
+        setInterval(displayCurrentTime, 1000); // Cập nhật thời gian mỗi giây
+        displayCurrentTime(); // Hiển thị thời gian ngay lập tức khi trang tải
+
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const bottomBar = document.getElementById('bottomBar');
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (st > lastScrollTop) {
+                // Lăn xuống
+                bottomBar.classList.add('hidden');
+            } else {
+                // Lăn lên
+                bottomBar.classList.remove('hidden');
+            }
+
+            lastScrollTop = st <= 0 ? 0 : st; // Đảm bảo không có giá trị âm
+        }, false);
+    </script>
+</body>
+</html>

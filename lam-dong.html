@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin tức thời tiết - Lâm Đồng</title>
+    <style>
+        /* CSS cho trang web */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Ẩn cuộn để video nền không bị cuộn */
+        }
+        header {
+            background-color: rgba(51, 51, 51, 0.8);
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: relative; /* Đảm bảo phần tử con được định vị tương đối so với phần tử này */
+            z-index: 10; /* Đảm bảo header nằm trên video nền */
+        }
+        .container {
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 10; /* Đảm bảo nội dung nằm trên video nền */
+            color: #fff; /* Màu chữ để dễ đọc trên nền video */
+        }
+        .weather-details {
+            flex: 1;
+        }
+        .map-container {
+            width: 500px;
+            height: 380px;
+            background-color: white; /* Màu nền cho ô chứa bản đồ */
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .bottom-bar {
+            background-color: rgba(51, 51, 51, 0.8);
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease-in-out;
+            z-index: 10; /* Đảm bảo bottom bar nằm trên video nền */
+        }
+        .weather-info {
+            display: flex;
+            align-items: center;
+        }
+        .weather-info span {
+            font-size: 72px; /* Tăng kích thước lên 3 lần */
+            font-weight: bold;
+        }
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Đảm bảo video bao phủ toàn bộ màn hình */
+            z-index: 1; /* Đảm bảo video nền nằm dưới nội dung */
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Lớp phủ để dễ đọc chữ trên nền video */
+            z-index: 2; /* Đảm bảo lớp phủ nằm trên video nhưng dưới nội dung */
+        }
+    </style>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <video autoplay muted loop>
+        <source src="https://cdn.pixabay.com/video/2019/08/29/26369-357512454_large.mp4" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ thẻ video.
+    </video>
+    <div class="overlay"></div>
+    <header>
+        <h1>Tin tức thời tiết - Lâm Đồng</h1>
+<p>Ngày 26/02/2024</p>
+    </header>
+    <div class="container">
+        <div class="weather-details">
+            <h2>Thông tin thời tiết tại Lâm Đồng</h2>
+            <div class="weather-info">
+                <span>🌧️ 24°C</span> <!-- Thay đổi biểu tượng và tăng kích thước -->
+            </div>
+            <h3>Trời mưa, mây mù</h3>
+            <p>Gió: 7 km/giờ | Độ ẩm: 80% | Tầm nhìn: 6 km | Áp suất: 740 mb</p>
+        </div>
+        <div class="map-container" id="map"></div> <!-- Ô chứa bản đồ -->
+    </div>
+    <div class="bottom-bar">
+        <span>Được tạo bởi Ngô Quang Huy ©</span>
+        <span id="currentTime"></span>
+    </div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const days = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+            const day = days[now.getDay()];
+
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const date = now.toLocaleDateString("vi-VN");
+
+            const currentTime = `${day}, ${date}, ${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentTime').textContent = currentTime;
+        }
+        setInterval(updateTime, 1000); // Cập nhật thời gian mỗi giây
+        updateTime(); // Gọi hàm để cập nhật thời gian ngay khi trang tải
+
+        // Khởi tạo bản đồ
+        var map = L.map('map').setView([11.5753, 108.1429], 12); // Tọa độ của Lâm Đồng
+
+        // Thêm lớp bản đồ từ OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Thêm một điểm đánh dấu tại Lâm Đồng
+        L.marker([11.5753, 108.1429]).addTo(map)
+            .bindPopup('Lâm Đồng')
+            .openPopup();
+    </script>
+</body>
+</html>
